@@ -1,0 +1,22 @@
+version: "3.2"
+
+services:
+    najsluzby_api:
+        image: webdevops/php-nginx-dev:8.0-alpine
+        container_name: najsluzby_api
+        environment:
+            WEB_DOCUMENT_ROOT: /app/public
+            PHP_DATE_TIMEZONE: Europe/Bratislava
+            COMPOSER_MEMORY_LIMIT: '-1'
+            COMPOSER_VERSION: 1
+            XDEBUG_START_WITH_REQUEST: '1'
+            XDEBUG_IDE_KEY: "PHPSTORM"
+            XDEBUG_CLIENT_PORT: 9003
+            XDEBUG_MODE: debug
+            XDEBUG_CLIENT_HOST: host.docker.internal
+        ports:
+            - "9080:80"
+            - "9020:9000"
+        volumes:
+            - ./najsluzby_api:/app
+            - ../../.ssh:/root/.ssh

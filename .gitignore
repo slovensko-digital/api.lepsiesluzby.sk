@@ -1,1 +1,6 @@
+# dev
+.idea/
+.DS_Store
+docker/local/docker-compose.compiled.yml
+/temp/
 /application/vendor/
