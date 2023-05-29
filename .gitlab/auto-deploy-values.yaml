@@ -1,0 +1,19 @@
+timeout: 120
+service:
+  externalPort: 5000
+  internalPort: 80
+image:
+  secrets:
+  - name: skdigital-bonet-registry
+livenessProbe:
+  path: "/test/ping"
+  initialDelaySeconds: 10
+  timeoutSeconds: 10
+  scheme: "HTTP"
+  probeType: "httpGet"
+  httpHeaders: []
+readinessProbe:
+  initialDelaySeconds: 15
+  probeType: "exec"
+  command:
+  - "true"
