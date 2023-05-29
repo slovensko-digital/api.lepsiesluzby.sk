@@ -34,8 +34,7 @@ production:
   rules:
     - if: '($CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == "") && ($KUBECONFIG == null || $KUBECONFIG == "")'
       when: never
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      when: manual
+    - when: on_success
 
 # The latest build job generates a dotenv report artifact with a CI_APPLICATION_TAG
 # that also includes the image digest. This configures Auto Deploy to receive
