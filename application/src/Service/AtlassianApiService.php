@@ -13,16 +13,17 @@ use Psr\Http\Message\ResponseInterface;
 class AtlassianApiService
 {
     private Client $client;
+    private ?string $token;
 
     public function __construct()
     {
+        $this->token = getenv('jira_auth_token');
         $this->client = new Client([
             'base_uri' => getenv('jira_api_host'),
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
                 'Access-Control-Allow-Origin' =>  '*',
-                'Authorization' => 'Basic '.getenv('jira_auth_token'),
             ],
         ]);
     }
@@ -33,6 +34,9 @@ class AtlassianApiService
     public function sendIssue(AttlassianIssueModel $data): ResponseInterface
     {
         return $this->client->post('servicedeskapi/request', [
+            RequestOptions::HEADERS => [
+                'Authorization' => 'Basic '.$this->token,
+            ],
             RequestOptions::JSON => $data->toArray(),
         ]);
     }
