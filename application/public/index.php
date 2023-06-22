@@ -1,5 +1,6 @@
 <?php
 
+use App\Handler\GetIssueSearchHandler;
 use App\Handler\HandlerInterface;
 use App\Handler\SendIdeaHandler;
 use App\Handler\SendProblemHandler;
@@ -34,12 +35,7 @@ function callAtlassian(HandlerInterface $handler, Request $request, Response $re
     ];
     try {
         $request = procesJsonRequest($request);
-        $result = $handler->handle($request);
-        return new \GuzzleHttp\Psr7\Response(
-            $result->getStatusCode(),
-            $headers,
-            json_encode($result)
-        );
+        return $handler->handle($request);
     } catch (\Exception $e) {
         $response = $response->withStatus(500);
         $response->getBody()->write($e->getMessage());
@@ -55,6 +51,11 @@ $app->get('/test/ping', function (Request $request, Response $response, $args) {
 
 $app->get('/test/auth', function (Request $request, Response $response, $args) {
     $handler = new TestAuthHandler();
+    return callAtlassian($handler, $request, $response);
+});
+
+$app->get('/issue/search', function (Request $request, Response $response, $args) {
+    $handler = new GetIssueSearchHandler();
     return callAtlassian($handler, $request, $response);
 });
 

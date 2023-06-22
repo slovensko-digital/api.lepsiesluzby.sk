@@ -4,3 +4,5 @@
 docker/local/docker-compose.compiled.yml
 /temp/
 /application/vendor/
+.env
+.env.local

@@ -16,7 +16,6 @@ class AtlassianApiService
 
     public function __construct()
     {
-
         $this->client = new Client([
             'base_uri' => getenv('jira_api_host'),
             'headers' => [
@@ -33,10 +32,18 @@ class AtlassianApiService
      */
     public function sendIssue(AttlassianIssueModel $data): ResponseInterface
     {
-        $response = $this->client->post('servicedeskapi/request', [
+        return $this->client->post('servicedeskapi/request', [
             RequestOptions::JSON => $data->toArray(),
         ]);
+    }
 
-        return $response;
+    /**
+     * @throws GuzzleException
+     */
+    public function getSearchData(array $searchData): ResponseInterface
+    {
+        return $this->client->get('api/2/search', [
+            RequestOptions::QUERY => $searchData,
+        ]);
     }
 }

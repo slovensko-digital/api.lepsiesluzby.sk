@@ -18,5 +18,5 @@ services:
             - "9080:80"
             - "9020:9000"
         volumes:
-            - ./najsluzby_api:/app
+            - ./najsluzby_api/application:/app
             - ../../.ssh:/root/.ssh
