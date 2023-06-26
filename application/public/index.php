@@ -35,7 +35,12 @@ function callAtlassian(HandlerInterface $handler, Request $request, Response $re
     ];
     try {
         $request = procesJsonRequest($request);
-        return $handler->handle($request);
+        $response = $handler->handle($request);
+        return new \GuzzleHttp\Psr7\Response(
+            $response->getStatusCode(),
+            $headers,
+            $response->getBody()
+        );
     } catch (\Exception $e) {
         $response = $response->withStatus(500);
         $response->getBody()->write($e->getMessage());
