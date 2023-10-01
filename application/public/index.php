@@ -13,6 +13,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
+
+// Add Error Handling Middleware
+//$app->addErrorMiddleware(true, true, false);
+
 function procesJsonRequest($request): Request
 {
     $contentType = $request->getHeaderLine('Content-Type');
@@ -26,15 +30,23 @@ function procesJsonRequest($request): Request
     return $request;
 }
 
-function callAtlassian(HandlerInterface $handler, Request $request, Response $response): Response
-{
-    $headers = [
-        'Content-Type' => 'application/json',
-        'Accept' => 'application/json',
-        'Access-Control-Allow-Origin' =>  '*',
-    ];
+function callAtlassian(
+    HandlerInterface $handler,
+    Request $request,
+    Response $response,
+    $accept = 'application/json',
+    $contentType = 'application/json'
+): Response {
+    $headers = [];
+    $headers["Access-Control-Allow-Origin"] = "*";
+    $headers['Access-Control-Allow-Methods'] = "*";
+    $headers['Access-Control-Allow-Headers'] = 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Recaptcha-Token,Recaptcha-Action';
+    $headers['Access-Control-Allow-Credentials'] = "true";
+    $headers['Access-Control-Max-Age'] = 86400;
+    $headers['Content-Type'] = $contentType;
+    $headers['Accept'] = $accept;
+
     try {
-        $request = procesJsonRequest($request);
         $response = $handler->handle($request);
         return new \GuzzleHttp\Psr7\Response(
             $response->getStatusCode(),
@@ -42,10 +54,14 @@ function callAtlassian(HandlerInterface $handler, Request $request, Response $re
             $response->getBody()
         );
     } catch (\Exception $e) {
-        $response = $response->withStatus(500);
-        $response->getBody()->write($e->getMessage());
+        return new \GuzzleHttp\Psr7\Response(
+            500,
+            $headers,
+            json_encode([
+                'error' => $e->getMessage()
+            ])
+        );
     }
-    return $response;
 }
 
 $app->get('/test/ping', function (Request $request, Response $response, $args) {
@@ -54,30 +70,40 @@ $app->get('/test/ping', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-$app->get('/test/auth', function (Request $request, Response $response, $args) {
+$app->post('/test/auth', function (Request $request, Response $response, $args) {
     $handler = new TestAuthHandler();
-    return callAtlassian($handler, $request, $response);
+    return $handler->handle($request);
+});
+
+$app->options('/test/auth', function (Request $request, Response $response, $args) {
+    $handler = new TestAuthHandler();
+    return $handler->handle($request);
 });
 
 $app->get('/issue/search', function (Request $request, Response $response, $args) {
     $handler = new GetIssueSearchHandler();
+    $request = procesJsonRequest($request);
     return callAtlassian($handler, $request, $response);
 });
 
 $app->post('/issue/idea', function (Request $request, Response $response, $args) {
     $handler = new SendIdeaHandler();
-    return callAtlassian($handler, $request, $response);
+    return callAtlassian($handler, $request, $response, 'multipart/form-data');
+});
+
+$app->options('/issue/idea', function (Request $request, Response $response, $args) {
+    $handler = new SendIdeaHandler();
+    return callAtlassian($handler, $request, $response, 'multipart/form-data');
 });
 
 $app->post('/issue/problem', function (Request $request, Response $response, $args) {
     $handler = new SendProblemHandler();
-    return callAtlassian($handler, $request, $response);
+    return callAtlassian($handler, $request, $response, 'multipart/form-data');
 });
 
-$app->get('/issue', function (Request $request, Response $response, $args) {
-    $request = procesJsonRequest($request);
-    $response->getBody()->write("Hello world!");
-    return $response;
+$app->options('/issue/problem', function (Request $request, Response $response, $args) {
+    $handler = new SendProblemHandler();
+    return callAtlassian($handler, $request, $response, 'multipart/form-data');
 });
 
 $app->run();
