@@ -69,6 +69,7 @@ class AtlassianApiService
             "public" => true,
             "temporaryAttachmentIds" => $files
         ];
+
         return $this->client->post('servicedeskapi/request/'.$issueId.'/attachment', [
             RequestOptions::HEADERS => [
                 'Accept' => 'application/json',

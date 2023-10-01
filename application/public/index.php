@@ -51,7 +51,7 @@ function callAtlassian(
         return new \GuzzleHttp\Psr7\Response(
             $response->getStatusCode(),
             $headers,
-            $response->getBody()
+            $response->getBody()->getContents()
         );
     } catch (\Exception $e) {
         return new \GuzzleHttp\Psr7\Response(
@@ -78,6 +78,7 @@ $app->post('/test/auth', function (Request $request, Response $response, $args) 
 $app->options('/test/auth', function (Request $request, Response $response, $args) {
     $handler = new TestAuthHandler();
     return $handler->handle($request);
+
 });
 
 $app->get('/issue/search', function (Request $request, Response $response, $args) {
