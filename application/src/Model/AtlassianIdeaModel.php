@@ -24,8 +24,8 @@ class AtlassianIdeaModel implements AttlassianIssueModel
         $phone = ''
     )
     {
-        $this->serviceDeskId = '4';
-        $this->requestTypeId = '19';
+        $this->serviceDeskId = '5';
+        $this->requestTypeId = '26';
         $this->summary = $summary;
         $this->description = $description;
         $this->name = $name;

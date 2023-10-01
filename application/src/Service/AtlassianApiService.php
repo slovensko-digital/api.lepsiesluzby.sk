@@ -14,6 +14,7 @@ class AtlassianApiService
 {
     private Client $client;
     private ?string $token;
+    private int $serviceDeskApiID = 5;
 
     public function __construct()
     {
@@ -48,6 +49,33 @@ class AtlassianApiService
     {
         return $this->client->get('api/2/search', [
             RequestOptions::QUERY => $searchData,
+        ]);
+    }
+
+    public function CreateAttachment(array $files): ResponseInterface
+    {
+        return $this->client->post('servicedeskapi/servicedesk/'.$this->serviceDeskApiID.'/attachTemporaryFile', [
+            RequestOptions::HEADERS => [
+                'Authorization' => 'Basic '.$this->token,
+                'X-Atlassian-Token' => 'nocheck',
+            ],
+            RequestOptions::MULTIPART => $files,
+        ]);
+    }
+
+    public function addIssueAttachments(string $issueId, array $files): ResponseInterface
+    {
+        $data = [
+            "public" => true,
+            "temporaryAttachmentIds" => $files
+        ];
+        return $this->client->post('servicedeskapi/request/'.$issueId.'/attachment', [
+            RequestOptions::HEADERS => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic '.$this->token,
+            ],
+            RequestOptions::JSON => $data,
         ]);
     }
 }

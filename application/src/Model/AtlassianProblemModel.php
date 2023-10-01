@@ -7,6 +7,7 @@ namespace App\Model;
 class AtlassianProblemModel extends AtlassianIdeaModel
 {
     private string $url;
+    private string $requestTypeId;
 
     public function __construct(
         $summary = '',
@@ -26,6 +27,7 @@ class AtlassianProblemModel extends AtlassianIdeaModel
             $email,
             $phone
         );
+        $this->requestTypeId = '25';
         $this->url = $url;
     }
 
