@@ -8,5 +8,5 @@ use App\Model\AtlassianIdeaModel;
 
 final class SendIdeaHandler extends IssueHandler
 {
-    private string $issueClassName = AtlassianIdeaModel::class;
+    protected string $issueClassName = AtlassianIdeaModel::class;
 }

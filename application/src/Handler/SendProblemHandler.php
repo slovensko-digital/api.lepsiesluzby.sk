@@ -8,5 +8,5 @@ use App\Model\AtlassianProblemModel;
 
 final class SendProblemHandler extends IssueHandler
 {
-    private string $issueClassName = AtlassianProblemModel::class;
+    protected string $issueClassName = AtlassianProblemModel::class;
 }
