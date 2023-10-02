@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class IssueHandler extends AbstractHandler
 {
-    private string $issueClassName = AtlassianIdeaModel::class;
+    protected string $issueClassName = AtlassianIdeaModel::class;
 
     public function getFilesFromRequest(ServerRequestInterface $request): array
     {
