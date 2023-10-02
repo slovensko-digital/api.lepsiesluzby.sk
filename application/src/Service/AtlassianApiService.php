@@ -75,7 +75,7 @@ class AtlassianApiService
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Basic '.$this->token,
             ],
-            RequestOptions::JSON => $data,
+            RequestOptions::BODY => json_encode($data, JSON_UNESCAPED_SLASHES),
         ]);
     }
 }
