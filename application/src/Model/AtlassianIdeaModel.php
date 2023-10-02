@@ -6,14 +6,14 @@ namespace App\Model;
 
 class AtlassianIdeaModel implements AttlassianIssueModel
 {
-    private string $serviceDeskId;
-    private string $requestTypeId;
-    private string $summary;
-    private string $description;
-    private string $name;
-    private string $surname;
-    private string $email;
-    private string $phone;
+    protected string $serviceDeskId;
+    protected string $requestTypeId;
+    protected string $summary;
+    protected string $description;
+    protected string $name;
+    protected string $surname;
+    protected string $email;
+    protected string $phone;
 
     public function __construct(
         $summary = '',
