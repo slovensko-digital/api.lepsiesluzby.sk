@@ -6,8 +6,7 @@ namespace App\Model;
 
 class AtlassianProblemModel extends AtlassianIdeaModel
 {
-    private string $url;
-    private string $requestTypeId;
+    protected string $url;
 
     public function __construct(
         $summary = '',
@@ -29,15 +28,6 @@ class AtlassianProblemModel extends AtlassianIdeaModel
         );
         $this->requestTypeId = '25';
         $this->url = $url;
-    }
-
-    public function fromArray(array $data = []): void
-    {
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->{$key} = $value;
-            }
-        }
     }
 
     public function toArray(): array
